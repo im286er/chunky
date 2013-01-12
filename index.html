@@ -1,0 +1,20 @@
+<form action="" method="">
+  <input type="file" name="upload" id="upload">
+</form>
+
+<script src="src/chunky.js"></script>
+<script>
+ 
+  var upload = document.getElementById('upload');
+  
+  upload.addEventListener('change', function (ev) {
+    var file = this.files[0]
+    , uploader = chunky.uploader(file, {endpoints: {
+          status: 'uploads/uploader.php?status'
+        , upload: 'uploads/uploader.php?upload_chunk'
+      }});
+
+    uploader.start();
+  });
+
+</script>
