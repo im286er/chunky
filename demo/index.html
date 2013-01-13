@@ -1,6 +1,21 @@
-<form action="" method="">
-  <input type="file" name="upload" id="upload">
-</form>
+<!doctype html>
+<html>
+<head>
+  <title>Chunky, chunked file uploader</title>
+</head>
+<body>
+<div id="page">
+  <form action="" method="">
+    <input type="file" name="upload" id="upload">
+  </form>
+
+  <div id="upload-controls">
+    <div id="progress-outer">
+      <div id="progress-inner"></div>
+    </div>
+    <button id="pause">Pause</button>
+  </div>
+</div>
 
 <script src="src/chunky.js"></script>
 <script>
@@ -9,10 +24,14 @@
   
   upload.addEventListener('change', function (ev) {
     var file = this.files[0]
-    , uploader = chunky.uploader(file, {endpoints: {
-          status: 'uploads/uploader.php?status'
-        , upload: 'uploads/uploader.php?upload_chunk'
-      }});
+      , uploader = chunky.uploader(file, {
+            chunkSize: 1024 * 1024 / 4 // small 0.25MB chunks for demo
+          , graceful: true
+          , endpoints: {
+                status: 'uploads/uploader.php?status'
+              , upload: 'uploads/uploader.php?upload_chunk'
+            }
+        });
 
     uploader.start();
   });
