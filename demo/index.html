@@ -1,39 +1,63 @@
 <!doctype html>
 <html>
 <head>
-  <title>Chunky, chunked file uploader</title>
+  <title>chunky.js :: A chunked file uploader</title>
+  <link rel="stylesheet" href="stylesheets/screen.css">
 </head>
 <body>
 <div id="page">
-  <form action="" method="">
-    <input type="file" name="upload" id="upload">
-  </form>
+  <section>
+    <h1>Select a file to upload (2-5MB is a good size)</h1>
 
-  <div id="upload-controls">
-    <div id="progress-outer">
-      <div id="progress-inner"></div>
+    <form action="/" method="post">
+      <input type="file" name="upload" id="upload">
+    </form>
+
+    <div id="upload-controls">
+      <div id="progress-outer">
+        <div id="progress-inner"></div>
+      </div>
+
+      <button id="pause">Pause</button>
     </div>
-    <button id="pause">Pause</button>
-  </div>
+  </section>
 </div>
 
-<script src="src/chunky.js"></script>
+<script src="../src/chunky.js"></script>
 <script>
- 
-  var upload = document.getElementById('upload');
-  
-  upload.addEventListener('change', function (ev) {
-    var file = this.files[0]
-      , uploader = chunky.uploader(file, {
-            chunkSize: 1024 * 1024 / 4 // small 0.25MB chunks for demo
-          , graceful: true
-          , endpoints: {
-                status: 'uploads/uploader.php?status'
-              , upload: 'uploads/uploader.php?upload_chunk'
-            }
-        });
 
-    uploader.start();
-  });
+  (function () {
+    var upload = document.getElementById('upload')
+      , progress = document.getElementById('progress-inner')
+      , updateProgress;
+    
+    updateProgress = function () {
+      var pctDone = (this.chunkOffset / this.file.size) * 100; 
+
+      if (pctDone > this.file.size) {
+        pctDone = 100;
+      }
+
+      progress.style.width = pctDone + '%';
+    };
+
+    upload.addEventListener('change', function (ev) {
+      var file = this.files[0]
+        , uploader = chunky.uploader(file, {
+              chunkSize: 1024 * 1024 / 4 // small 0.25MB chunks for demo
+            , graceful: true
+            , onchunkcomplete: updateProgress
+            , endpoints: {
+                  status: 'uploads/uploader.php?status'
+                , upload: 'uploads/uploader.php?upload_chunk'
+              }
+          });
+
+      uploader.checkStatus(function () {
+        updateProgress.call(this);
+        this.start();
+      });
+    });
+  }).call(this);
 
 </script>

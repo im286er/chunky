@@ -81,6 +81,8 @@
 
     xhr.open('GET', this.requestURL('status'), true);
     xhr.onload = function () {
+      var status;
+
       try {
         // Attempt to get the file size from the json response body
         status = JSON.parse(this.responseText);
@@ -111,6 +113,12 @@
     xhr.open('POST', this.requestURL('upload'), true);
     xhr.onload = function () {
       if (that.state === UPLOADING) {
+        // Run callback for chunk completion if set
+        if (typeof that.settings.onchunkcomplete === 'function') {
+          that.settings.onchunkcomplete.call(that);
+        }
+
+        // Upload next chunk or set as complete and finish
         if (chunkTo < that.file.size) {
           that.uploadChunk();
         }

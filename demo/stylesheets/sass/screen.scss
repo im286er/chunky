@@ -1,6 +1,28 @@
-/* Welcome to Compass.
- * In this file you should write your main styles. (or centralize your imports)
- * Import this file using the following HTML or equivalent:
- * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-
 @import "compass/reset";
+
+h1 {
+  font-size: 1.8em;
+  margin: 0 0 40px;
+}
+
+#page {
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+#upload-controls {
+  margin: 20px 0;
+  padding: 20px 0;
+  border-top: solid 1px silver;
+  // display: none;
+}
+
+#progress-outer {
+  height: 20px;
+  border: solid 1px silver;
+}
+#progress-inner {
+  background-color: lightgreen;
+  height: 20px;
+  width: 0;
+}
