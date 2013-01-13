@@ -110,14 +110,16 @@
       , that = this;
 
     this.chunkOffset = chunkTo;
+    this._upload = xhr;
+
     xhr.open('POST', this.requestURL('upload'), true);
     xhr.onload = function () {
-      if (that.state === UPLOADING) {
-        // Run callback for chunk completion if set
-        if (typeof that.settings.onchunkcomplete === 'function') {
-          that.settings.onchunkcomplete.call(that);
-        }
+      // Run callback for chunk completion if set
+      if (typeof that.settings.onchunkcomplete === 'function') {
+        that.settings.onchunkcomplete.call(that);
+      }
 
+      if (that.state === UPLOADING) {
         // Upload next chunk or set as complete and finish
         if (chunkTo < that.file.size) {
           that.uploadChunk();
@@ -129,6 +131,19 @@
     };
 
     xhr.send(chunk);
+  };
+
+  cup.pause = function () {
+    this.state = PAUSED;
+
+    // abort current chunk
+    if (
+      !this.settings.graceful &&
+      this._upload &&
+      typeof this._upload.abort === 'function'
+    ) {
+      this._upload.abort(); 
+    }
   };
 
   // Get the endpoint url with the files name appended
