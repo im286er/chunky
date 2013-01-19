@@ -118,23 +118,28 @@
 
     xhr.open('POST', this.requestURL('upload'), true);
     xhr.onload = function () {
-      // Run callback for chunk completion if set
-      if (typeof that.settings.onchunkcomplete === 'function') {
-        that.settings.onchunkcomplete.call(that);
-      }
-
-      if (that.state === UPLOADING) {
-        // Upload next chunk or set as complete and finish
-        if (chunkTo < that.file.size) {
-          that.uploadChunk();
+      if (this.status === 200) {
+        // Run callback for chunk completion if set
+        if (typeof that.settings.onchunkcomplete === 'function') {
+          that.settings.onchunkcomplete.call(that);
         }
-        else {
-          that.state = COMPLETE;
 
-          if (typeof that.settings.oncomplete === 'function') {
-            that.settings.oncomplete.call(this);
+        if (that.state === UPLOADING) {
+          // Upload next chunk or set as complete and finish
+          if (chunkTo < that.file.size) {
+            that.uploadChunk();
+          }
+          else {
+            that.state = COMPLETE;
+
+            if (typeof that.settings.oncomplete === 'function') {
+              that.settings.oncomplete.call(this);
+            }
           }
         }
+      }
+      else {
+        that.onError();
       }
     };
     xhr.onerror = function (ev) {
