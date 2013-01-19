@@ -67,10 +67,12 @@
       this.uploadChunk();
     };
 
+    // Status of file upload has already been checked so start upload
     if (this.state === READY) {
       return fn.call(this);
     }
 
+    // Check the status before starting
     this.checkStatus(fn);
   };
 
@@ -166,7 +168,7 @@
     return url + 'filename=' + this.file.name;
   };
 
-  // Default error handler
+  // Default error handler, 
   cup.onError = function () {
     this.failedChunks += 1;
 
