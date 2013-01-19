@@ -42,6 +42,7 @@
   const UPLOADING = 2; // The upload is in progress
   const PAUSED = 3; // The upload has been paused
   const COMPLETE = 4; // The upload has completed
+  const ERROR = 5; // The upload failed
 
   // ##Uploader
   // 
