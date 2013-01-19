@@ -130,6 +130,10 @@
         }
         else {
           that.state = COMPLETE;
+
+          if (typeof that.settings.oncomplete === 'function') {
+            that.settings.oncomplete.call(this);
+          }
         }
       }
     };
@@ -153,6 +157,16 @@
       this._upload.abort(); 
     }
   };
+
+  // Returns true if this uploader is actively uploading
+  cup.isUploading = function () {
+    return this.state === UPLOADING;
+  },
+
+  // Returns true if this uploader is paused
+  cup.isPaused = function () {
+    return this.state === PAUSED;
+  },
 
   // Get the endpoint url with the files name appended
   cup.requestURL = function (endpoint) {
