@@ -64,33 +64,55 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 
 /* line 3, sass/screen.scss */
-h1 {
-  font-size: 1.8em;
-  margin: 0 0 40px;
+body {
+  font: 0.85em/1 "Myriad Pro", Helvetica, Arial, sans-serif;
+  color: #444;
 }
 
 /* line 8, sass/screen.scss */
-#page {
-  max-width: 800px;
-  margin: 40px auto;
+h1 {
+  font-size: 1.8em;
+  margin: 0 0 20px;
 }
 
 /* line 13, sass/screen.scss */
+#page {
+  max-width: 800px;
+  min-width: 320px;
+  margin: 40px auto;
+}
+
+/* line 19, sass/screen.scss */
+form {
+  background-color: #FFF4DB;
+  padding: 20px;
+}
+
+/* line 24, sass/screen.scss */
 #upload-controls {
   margin: 20px 0;
   padding: 20px 0;
   border-top: solid 1px silver;
+  position: relative;
 }
 
-/* line 20, sass/screen.scss */
+/* line 31, sass/screen.scss */
 #progress-outer {
   height: 20px;
   border: solid 1px silver;
+  margin-right: 70px;
 }
 
-/* line 24, sass/screen.scss */
+/* line 36, sass/screen.scss */
 #progress-inner {
   background-color: lightgreen;
   height: 20px;
   width: 0;
+}
+
+/* line 41, sass/screen.scss */
+#pause {
+  position: absolute;
+  top: 20px;
+  right: 0;
 }

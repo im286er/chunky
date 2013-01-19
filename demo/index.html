@@ -7,7 +7,7 @@
 <body>
 <div id="page">
   <section>
-    <h1>Select a file to upload (2-5MB is a good size)</h1>
+    <h1>Select a file to upload (about 5MB is a good size)</h1>
 
     <form action="/" method="post">
       <input type="file" name="upload" id="upload">
@@ -47,8 +47,8 @@
       var file = this.files[0]
         
       uploader = chunky.uploader(file, {
-          chunkSize: 1024 * 1024 / 4 // small 0.25MB chunks for demo
-        , graceful: true
+          chunkSize: 1024 * 1024 / 2 // small 0.5MB chunks for demo
+        , graceful: false 
         , onchunkcomplete: updateProgress
         , endpoints: {
               status: 'uploads/uploader.php?status'
@@ -65,11 +65,14 @@
     pause.addEventListener('click', function (ev) {
       if (this.classList.contains('paused')) {
         this.classList.remove('paused');
+        this.innerHTML = 'Pause';
         return uploader.start();
       }
       
       this.classList.add('paused');
+      this.innerHTML = 'Resume';
       uploader.pause();
+
       ev.preventDefault();
     }, false);
   }).call(this);

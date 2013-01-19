@@ -1,7 +1,6 @@
 (function (ns, undefined) {
   var chunky = (ns.chunky = {})
     , uploader; 
-    
 
   // Chunky
   // ---
@@ -51,6 +50,8 @@
     this.settings = settings;
     this.file = file;
     this.state = IDLE;
+    this.failedChunks = 0; // Track failed chunk uploads
+    this._upload;
   };
 
   cup = uploader.prototype;
@@ -105,6 +106,7 @@
   // Start the upload process
   cup.uploadChunk = function () {
     var xhr = new XMLHttpRequest
+      , upload = xhr.upload
       , chunkTo = this.chunkOffset + this.settings.chunkSize
       , chunk = this.file.slice(this.chunkOffset, chunkTo)
       , that = this;
@@ -129,10 +131,14 @@
         }
       }
     };
+    xhr.onerror = function (ev) {
+      that.onError();
+    };
 
     xhr.send(chunk);
   };
 
+  // Pause the upload process
   cup.pause = function () {
     this.state = PAUSED;
 
@@ -158,6 +164,24 @@
     }
 
     return url + 'filename=' + this.file.name;
+  };
+
+  // Default error handler
+  cup.onError = function () {
+    this.failedChunks += 1;
+
+    // Three failed attempts for the same chunk then abort and set state
+    if (this.failedChunks === 3) {
+      this.state = ERROR;
+      
+      if (typeof this.settings.onerror === 'function') {
+        this.settings.onerror.call(this);
+      }
+    }
+    // Retry the last chunk upload
+    else {
+      this.uploadChunk();
+    }
   };
 
 }(this));
