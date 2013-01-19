@@ -8,8 +8,10 @@ class Uploader {
 
     if ($handle) {
       fwrite($handle, $chunk);
-      fclose($handle);
+      return fclose($handle);
     }
+
+    throw new Exception('Failed to open file for writing');
   }
 
   // Return the status of the file upload, basically the size

@@ -30,8 +30,32 @@
     var upload = document.getElementById('upload')
       , progress = document.getElementById('progress-inner')
       , pause = document.getElementById('pause')
+      , uploaders = []
       , uploader
+      , pauseActiveUploads
+      , resumeUploads
       , updateProgress;
+
+    pauseActiveUploads = function () {
+      uploaders.forEach(function (u) {
+        if (u.isUploading()) {
+          u.pause();
+          console.log('Pausing');
+        }
+      });
+    };
+
+    resumeUploads = function () {
+      uploaders.forEach(function (u) {
+        if (u.isPaused()) {
+          u.start();
+          console.log('Resuming');
+        }
+      });
+    };
+
+    window.addEventListener("offline", pauseActiveUploads, false);
+    window.addEventListener("online", resumeUploads, false);
     
     updateProgress = function () {
       var pctDone = (this.chunkOffset / this.file.size) * 100; 
@@ -55,6 +79,7 @@
             , upload: 'uploads/uploader.php?upload_chunk'
           }
       });
+      uploaders.push(uploader);
 
       uploader.checkStatus(function () {
         updateProgress.call(this);
