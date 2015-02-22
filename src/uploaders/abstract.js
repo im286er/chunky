@@ -41,8 +41,14 @@
 
       xhr.open('POST', this.requestURL('upload'), true);
       xhr.onload = function () {
+        var response;
+
         if (this.status === 200) {
-          callback.call(that, JSON.parse(this.responseText));
+          if (this.responseText) {
+            response = JSON.parse(this.responseText);
+          }
+
+          callback.call(that, response);
         }
         else {
           that.onError();

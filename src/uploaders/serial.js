@@ -57,7 +57,7 @@
       if (that.state === this._states.UPLOADING) {
         // Upload next chunk or set as complete and finish
         if (chunkTo < that.file.size) {
-          that.uploadChunk();
+          that.upload();
         }
         else {
           that.state = this._states.COMPLETE;
@@ -95,7 +95,7 @@
     }
     // Retry the last chunk upload
     else {
-      this.uploadChunk();
+      this.upload();
     }
   };
 
