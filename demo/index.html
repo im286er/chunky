@@ -24,6 +24,8 @@
 </div>
 
 <script src="../src/chunky.js"></script>
+<script src="../src/uploaders/abstract.js"></script>
+<script src="../src/uploaders/serial.js"></script>
 <script>
 
   (function () {
@@ -56,9 +58,9 @@
 
     window.addEventListener("offline", pauseActiveUploads, false);
     window.addEventListener("online", resumeUploads, false);
-    
+
     updateProgress = function () {
-      var pctDone = (this.chunkOffset / this.file.size) * 100; 
+      var pctDone = (this.chunkOffset / this.file.size) * 100;
 
       if (pctDone > 100) {
         pctDone = 100;
@@ -69,10 +71,10 @@
 
     upload.addEventListener('change', function (ev) {
       var file = this.files[0]
-        
-      uploader = chunky.uploader(file, {
+
+      uploader = chunky.upload(file, {
           chunkSize: 1024 * 1024 / 2 // small 0.5MB chunks for demo
-        , graceful: false 
+        , graceful: false
         , onchunkcomplete: updateProgress
         , endpoints: {
               status: 'uploads/uploader.php?status'
@@ -93,7 +95,7 @@
         this.innerHTML = 'Pause';
         return uploader.start();
       }
-      
+
       this.classList.add('paused');
       this.innerHTML = 'Resume';
       uploader.pause();
