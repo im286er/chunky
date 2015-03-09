@@ -21,7 +21,6 @@
       var settings = {
               chunkSize: 1024 * 1024 // default 1MB upload chunks
             , graceful: false // complete current chunk on pause?
-            , uploader: 'SerialUploader'
           }
         , setting;
 
@@ -32,10 +31,8 @@
         }
       }
 
-      return new this.uploaders[settings.uploader](file, settings);
-    },
-
-    uploaders: {}
+      return new this.Uploader(file, settings); // XXX AMD
+    }
   };
 
 }(this));

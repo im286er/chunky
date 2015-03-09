@@ -23,9 +23,10 @@
   </section>
 </div>
 
+<script src="../src/xhr2lib.js"></script>
+<script src="../src/jobz.js"></script>
 <script src="../src/chunky.js"></script>
-<script src="../src/uploaders/abstract.js"></script>
-<script src="../src/uploaders/serial.js"></script>
+<script src="../src/uploader.js"></script>
 <script>
 
   (function () {
@@ -59,8 +60,9 @@
     window.addEventListener("offline", pauseActiveUploads, false);
     window.addEventListener("online", resumeUploads, false);
 
-    updateProgress = function () {
-      var pctDone = (this.chunkOffset / this.file.size) * 100;
+    updateProgress = function (size) {
+      var width = parseInt(progress.style.width, 0) || 0
+        , pctDone = Math.ceil(width + ((size / this.file.size) * 100));
 
       if (pctDone > 100) {
         pctDone = 100;
@@ -73,18 +75,16 @@
       var file = this.files[0]
 
       uploader = chunky.upload(file, {
-          chunkSize: 1024 * 1024 / 2 // small 0.5MB chunks for demo
-        , graceful: false
+          chunkSize: 1024 * 1024 / 2 // small 0.5MB chunks
         , onchunkcomplete: updateProgress
         , endpoints: {
-              status: 'uploads/uploader.php?status'
-            , upload: 'uploads/uploader.php?upload_chunk'
+              status: 'uploader.php?status'
+            , upload: 'uploader.php?upload_chunk_concurrent'
           }
       });
       uploaders.push(uploader);
 
       uploader.checkStatus(function () {
-        updateProgress.call(this);
         this.start();
       });
     }, false);
@@ -93,7 +93,7 @@
       if (this.classList.contains('paused')) {
         this.classList.remove('paused');
         this.innerHTML = 'Pause';
-        return uploader.start();
+        return uploader.play();
       }
 
       this.classList.add('paused');
@@ -105,3 +105,5 @@
   }).call(this);
 
 </script>
+</body>
+</html>
